@@ -1,0 +1,7 @@
+kidsr.ru, www.kidsr.ru {
+	reverse_proxy frontend:3000
+}
+
+api.kidsr.ru {
+	reverse_proxy backend:8000
+}
