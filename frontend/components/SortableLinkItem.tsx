@@ -33,6 +33,7 @@ export default function SortableLinkItem({
 
   const titleError = errors.items?.[index]?.title?.message;
   const urlError = errors.items?.[index]?.url?.message;
+  const commentError = errors.items?.[index]?.comment?.message;
 
   return (
     <div
@@ -77,6 +78,16 @@ export default function SortableLinkItem({
             {...register(`items.${index}.url`)}
           />
           {urlError && <p className="mt-1 text-xs text-accent">{urlError}</p>}
+        </div>
+
+        <div>
+          <input
+            type="text"
+            placeholder="Подсказка"
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+            {...register(`items.${index}.comment`)}
+          />
+          {commentError && <p className="mt-1 text-xs text-accent">{commentError}</p>}
         </div>
       </div>
 

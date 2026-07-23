@@ -28,6 +28,7 @@ class LinkItem(models.Model):
     url = models.URLField()
     order = models.PositiveIntegerField(default=0)
     click_count = models.PositiveIntegerField(default=0)
+    comment = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         ordering = ["order"]

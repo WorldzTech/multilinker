@@ -9,6 +9,10 @@ export const linkItemSchema = z.object({
     .string()
     .min(1, "Укажите URL")
     .url("Введите корректный URL, например https://example.com"),
+  comment: z
+    .string()
+    .max(255, "Максимум 255 символов")
+    .optional()
 });
 
 export const multiLinkSchema = z.object({

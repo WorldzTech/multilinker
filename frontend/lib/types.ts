@@ -4,6 +4,7 @@ export interface LinkItemData {
   url: string;
   order: number;
   click_count: number;
+  comment?: string;
 }
 
 export interface MultiLinkData {
@@ -18,6 +19,7 @@ export interface MultiLinkData {
 export interface CreateLinkItemPayload {
   title: string;
   url: string;
+  comment?: string;
   order: number;
 }
 

@@ -6,7 +6,7 @@ from .models import LinkItem, MultiLink
 class LinkItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = LinkItem
-        fields = ["id", "title", "url", "order", "click_count"]
+        fields = ["id", "title", "url", "order", "click_count", "comment"]
         read_only_fields = ["id", "click_count"]
 
 

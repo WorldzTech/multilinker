@@ -23,7 +23,7 @@ import type { MultiLinkData } from "@/lib/types";
 import SortableLinkItem from "./SortableLinkItem";
 import CreateResult from "./CreateResult";
 
-const emptyItem = { title: "", url: "" };
+const emptyItem = { title: "", url: "", comment: "" };
 
 export default function MultiLinkForm() {
   const [result, setResult] = useState<MultiLinkData | null>(null);
@@ -76,6 +76,7 @@ export default function MultiLinkForm() {
           title: item.title,
           url: item.url,
           order: index,
+          comment: item.comment ?? "",
         })),
       };
       const response = await api.post<MultiLinkData>("/multilinks/", payload);

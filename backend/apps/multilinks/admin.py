@@ -17,5 +17,5 @@ class MultiLinkAdmin(admin.ModelAdmin):
 
 @admin.register(LinkItem)
 class LinkItemAdmin(admin.ModelAdmin):
-    list_display = ["title", "url", "multilink", "order", "click_count"]
+    list_display = ["title", "url", "multilink", "order", "click_count", "comment"]
     list_filter = ["multilink"]
