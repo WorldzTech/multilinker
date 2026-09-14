@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "corsheaders",
+    "drf_spectacular",
     "apps.multilinks",
 ]
 
@@ -122,6 +123,29 @@ REST_FRAMEWORK = {
         "rest_framework.renderers.JSONRenderer",
         "rest_framework.renderers.BrowsableAPIRenderer",
     ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    # The API is public and unauthenticated. No authentication classes at all,
+    # so the schema does not advertise auth the API never checks.
+    "DEFAULT_AUTHENTICATION_CLASSES": [],
+    # ponytail: throttle counters live in the default local-memory cache, so the
+    # limit is per gunicorn worker; point CACHES at Redis if that gets too loose.
+    # Only the create endpoints are throttled (see the "create" scope on the
+    # views) - read/resolve/click traffic is served to real visitors, and the
+    # frontend's server-side calls all share one container IP.
+    "DEFAULT_THROTTLE_RATES": {
+        "create": os.environ.get("API_CREATE_THROTTLE_RATE", "30/min"),
+    },
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Route Links API",
+    "DESCRIPTION": (
+        "Public API for creating multilink pages (a page aggregating several "
+        "links) and short links. No authentication is required."
+    ),
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "SCHEMA_PATH_PREFIX": "/api/v1",
 }
 
 

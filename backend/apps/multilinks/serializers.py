@@ -45,3 +45,9 @@ class ShortLinkSerializer(serializers.ModelSerializer):
         model = ShortLink
         fields = ["id", "slug", "url", "click_count", "created_at"]
         read_only_fields = ["id", "slug", "click_count", "created_at"]
+
+
+class ClickCountSerializer(serializers.Serializer):
+    """Response body of the click-tracking endpoint."""
+
+    click_count = serializers.IntegerField(read_only=True)

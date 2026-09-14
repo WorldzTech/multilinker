@@ -1,11 +1,14 @@
 from django.db.models import F
 from django.shortcuts import get_object_or_404
+from drf_spectacular.utils import extend_schema
 from rest_framework import generics, status
 from rest_framework.response import Response
+from rest_framework.throttling import ScopedRateThrottle
 from rest_framework.views import APIView
 
 from .models import LinkItem, MultiLink, ShortLink
 from .serializers import (
+    ClickCountSerializer,
     MultiLinkCreateSerializer,
     MultiLinkPublicSerializer,
     ShortLinkSerializer,
@@ -17,6 +20,8 @@ class MultiLinkCreateView(generics.CreateAPIView):
 
     queryset = MultiLink.objects.all()
     serializer_class = MultiLinkCreateSerializer
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "create"
 
 
 class MultiLinkPublicView(generics.RetrieveAPIView):
@@ -27,8 +32,15 @@ class MultiLinkPublicView(generics.RetrieveAPIView):
     lookup_field = "slug"
 
 
+@extend_schema(
+    request=None,
+    responses={200: ClickCountSerializer},
+    summary="Register a click on one link of a multilink page",
+)
 class LinkItemClickView(APIView):
     """POST /api/v1/s/{slug}/click/{item_id}/ - increment the click counter."""
+
+    serializer_class = ClickCountSerializer
 
     def post(self, request, slug, item_id):
         item = get_object_or_404(LinkItem, id=item_id, multilink__slug=slug)
@@ -42,8 +54,22 @@ class ShortLinkCreateView(generics.CreateAPIView):
 
     queryset = ShortLink.objects.all()
     serializer_class = ShortLinkSerializer
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "create"
 
 
+class ShortLinkDetailView(generics.RetrieveAPIView):
+    """GET /api/v1/shortlinks/{slug}/ - read a short link without counting a hit."""
+
+    queryset = ShortLink.objects.all()
+    serializer_class = ShortLinkSerializer
+    lookup_field = "slug"
+
+
+@extend_schema(
+    summary="Resolve a short link",
+    description="Returns the target URL and increments the short link's click counter.",
+)
 class ShortLinkResolveView(generics.RetrieveAPIView):
     """GET /api/v1/r/{slug}/ - resolve a short link and count the hit."""
 
