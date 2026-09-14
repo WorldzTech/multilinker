@@ -4,8 +4,12 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import LinkItem, MultiLink
-from .serializers import MultiLinkCreateSerializer, MultiLinkPublicSerializer
+from .models import LinkItem, MultiLink, ShortLink
+from .serializers import (
+    MultiLinkCreateSerializer,
+    MultiLinkPublicSerializer,
+    ShortLinkSerializer,
+)
 
 
 class MultiLinkCreateView(generics.CreateAPIView):
@@ -31,3 +35,23 @@ class LinkItemClickView(APIView):
         LinkItem.objects.filter(pk=item.pk).update(click_count=F("click_count") + 1)
         item.refresh_from_db(fields=["click_count"])
         return Response({"click_count": item.click_count}, status=status.HTTP_200_OK)
+
+
+class ShortLinkCreateView(generics.CreateAPIView):
+    """POST /api/v1/shorten/ - create a short link for a single URL."""
+
+    queryset = ShortLink.objects.all()
+    serializer_class = ShortLinkSerializer
+
+
+class ShortLinkResolveView(generics.RetrieveAPIView):
+    """GET /api/v1/r/{slug}/ - resolve a short link and count the hit."""
+
+    queryset = ShortLink.objects.all()
+    serializer_class = ShortLinkSerializer
+    lookup_field = "slug"
+
+    def get_object(self):
+        link = super().get_object()
+        ShortLink.objects.filter(pk=link.pk).update(click_count=F("click_count") + 1)
+        return link

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import LinkItem, MultiLink
+from .models import LinkItem, MultiLink, ShortLink
 
 
 class LinkItemSerializer(serializers.ModelSerializer):
@@ -38,3 +38,10 @@ class MultiLinkPublicSerializer(serializers.ModelSerializer):
     class Meta:
         model = MultiLink
         fields = ["id", "title", "slug", "description", "created_at", "items"]
+
+
+class ShortLinkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShortLink
+        fields = ["id", "slug", "url", "click_count", "created_at"]
+        read_only_fields = ["id", "slug", "click_count", "created_at"]

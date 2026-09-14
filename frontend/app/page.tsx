@@ -1,4 +1,5 @@
 import MultiLinkForm from "@/components/MultiLinkForm";
+import ShortenForm from "@/components/ShortenForm";
 
 export default function Home() {
   return (
@@ -15,7 +16,10 @@ export default function Home() {
             Соберите все свои ссылки на одной странице и поделитесь короткой ссылкой
           </p>
         </div>
-        <MultiLinkForm />
+        <div className="space-y-4">
+          <ShortenForm />
+          <MultiLinkForm />
+        </div>
       </div>
     </main>
   );
